@@ -82,19 +82,25 @@ app.get("/users/:id", (req, res) => {
 
 app.post("/users", (req, res) => {
     const userToAdd = req.body;
+
+    //Generating new id
+    userToAdd.id = String(Math.floor(100000 + Math.random() * 900000));
+
     addUser(userToAdd);
-    res.send();
+    //Sending status 201
+    res.status(201).send(userToAdd);
 });
 
 app.delete("/users/:id", (req, res) => {
     const id = req.params["id"];
     //Find index
     const userIndex = users.users_list.findIndex((user) => user.id === id)
-    if (index === -1){
+    if (userIndex === -1){
         res.status(404).send("Resource not found.");
     } else{
         //Delete user from list
-        users.users_list.splice(index, 1)
+        users.users_list.splice(userIndex, 1)
+        res.status(204).send();
     }
     
 
@@ -102,7 +108,7 @@ app.delete("/users/:id", (req, res) => {
 
 app.listen(port, () => {
     console.log(
-        'Example app listening at http://localhost:${port}'
+        `Example app listening at http://localhost:${port}`
     );
 });
 
